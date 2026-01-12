@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Silly Story Generator</title>
+  <style>
+    body {
+      font: 1.2em / 1.5 system-ui;
+      margin: 0 auto;
+      width: 500px;
+    }
+
+    fieldset {
+      border: 0;
+    }
+
+    fieldset,
+    legend {
+      padding: 0;
+      margin: 0;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      margin-top: 5px;
+      padding: 5px;
+      width: 50%;
+      display: block;
+    }
+
+    select {
+      margin-top: 5px;
+      padding: 5px;
+      width: 50%;
+      display: block;
+    }
+
+    div,
+    fieldset {
+      margin-top: 20px;
+    }
+
+    p {
+      margin-top: 10px;
+      background: #2e94a7;
+      padding: 20px;
+      visibility: hidden;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <h1 id="title">Silly Story Generator</h1>
+
+  <div>
+    <label for="custom-name" id="label-custom-name">Enter custom name:</label>
+    <input id="custom-name" type="text" placeholder="" />
+  </div>
+
+  <fieldset>
+    <legend id="legend-locale">Choose locale:</legend>
+    <label for="us">US</label>
+    <input id="us" type="radio" name="uk-us" value="us" checked />
+    <label for="uk">UK</label>
+    <input id="uk" type="radio" name="uk-us" value="uk" />
+    <label for="it">IT</label>
+    <input id="it" type="radio" name="uk-us" value="it" />
+  </fieldset>
+
+  <div>
+    <label for="font-family" id="label-font-family">Font:</label>
+    <select id="font-family">
+        <option value="Arial">Arial</option> 
+        <option value="Times New Roman">Times New Roman</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="font-size-select" id="label-font-size-select">Font Size:</label>
+    <select id="font-size-select">
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
+      <option value="13">13</option>
+      <option value="14">14</option>
+      <option value="15">15</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="color" id="label-color">Background color:</label>
+    <input type="color" id="color" />
+  </div>
+
+  <div>
+    <button class="generate" id="btn-generate">Generate random story</button>
+    <button id="reset" data-label-reset="Reset">Reset</button>
+    <button id="save" data-label-save="Save Story">Save Story</button>
+  </div>
+
+  <p class="story"></p>
+
+  <script>
+ 
+    const translations = {
+      en: {
+        title: "Silly Story Generator",
+        labelCustomName: "Enter custom name:",
+        legendLocale: "Choose locale:",
+        labelFontFamily: "Font:",
+        labelFontSizeSelect: "Font Size:",
+        labelColor: "Background color:",
+        btnGenerate: "Generate random story",
+        btnReset: "Reset",
+        btnSave: "Save Story",
+      },
+      it: {
+        title: "Silly Story Generator",
+        labelCustomName: "Enter custom name:",
+        legendLocale: "Choose locale:",
+        labelFontFamily: "Font:",
+        labelFontSizeSelect: "Font Size:",
+        labelColor: "Background color:",
+        btnGenerate: "Generate random story",
+        btnReset: "Reset",
+        btnSave: "Save Story",
+      }
+    };
+
+
+    const storyTemplates = {
+      en: {
+        characters: ["Willy the Goblin", "Big Daddy", "Father Christmas"],
+        places: ["the soup kitchen", "Disneyland", "the White House"],
+        events: [
+          "spontaneously combusted",
+          "melted into a puddle on the sidewalk",
+          "turned into a slug and slithered away",
+        ],
+        template: (character, place, event, name, weight, temperature) =>
+          `It was ${temperature} outside, so ${character} went for a walk. When they got to ${place}, they stared in horror for a few moments, then ${event}. ${name} saw the whole thing, but was not surprised — ${character} weighs ${weight}, and it was a hot day.`
+      },
+      it: {
+        characters: ["Guglielmo il Folletto", "Grande Papà", "Babbo Natale"],
+        places: ["la cucina della carità", "Disneyland", "la Casa Bianca"],
+        events: [
+          "è combusto spontaneamente",
+          "si è sciolto in una pozza sul marciapiede",
+          "si è trasformato in una lumaca e ha strisciato via",
+        ],
+        template: (character, place, event, name, weight, temperature) =>
+          `C'erano ${temperature} all'esterno, così ${character} è andato a fare una passeggiata. Quando è arrivato ${place}, ha fissato con orrore per alcuni momenti, poi ${event}. ${name} ha visto tutto, ma non era sorpreso — ${character} pesa ${weight}, ed era una giornata calda.`
+      }
+    };
+
+    const customName = document.getElementById("custom-name");
+    const generateBtn = document.querySelector(".generate");
+    const story = document.querySelector(".story");
+    const colorPicker = document.getElementById("color");
+    const resetBtn = document.getElementById("reset");
+    const saveBtn = document.getElementById("save");
+    const fontFamilySelect = document.getElementById("font-family");
+    const fontSizeSelect = document.getElementById("font-size-select");
+
+    const usRadio = document.getElementById("us");
+    const itRadio = document.getElementById("it");
+
+    let currentLanguage = "en";
+
+    function randomValueFromArray(array) {
+      const random = Math.floor(Math.random() * array.length);
+      return array[random];
+    }
+
+    function updateUILanguage(lang) {
+      currentLanguage = lang;
+      const t = translations[lang];
+
+      document.getElementById("title").textContent = t.title;
+      document.getElementById("label-custom-name").textContent = t.labelCustomName;
+      document.getElementById("legend-locale").textContent = t.legendLocale;
+      document.getElementById("label-font-family").textContent = t.labelFontFamily;
+      document.getElementById("label-font-size-select").textContent = t.labelFontSizeSelect;
+      document.getElementById("label-color").textContent = t.labelColor;
+      document.getElementById("btn-generate").textContent = t.btnGenerate;
+      document.getElementById("reset").textContent = t.btnReset;
+      document.getElementById("save").textContent = t.btnSave;
+
+
+
+    }
+
+    function returnRandomStoryString() {
+      const template = storyTemplates[currentLanguage];
+      const randomCharacter = randomValueFromArray(template.characters);
+      const randomPlace = randomValueFromArray(template.places);
+      const randomEvent = randomValueFromArray(template.events);
+
+      let weight, temperature;
+
+      if (currentLanguage === "en") {
+        weight = "300 pounds";
+        temperature = "94 Fahrenheit";
+      } else if (currentLanguage === "it") {
+        weight = `${Math.round(300 / 2)} kg`;
+        temperature = `${Math.round((94 - 32) * (5 / 9))} gradi`;
+      }
+
+      const defaultName = translations[currentLanguage].defaultName;
+      const storyText = template.template(randomCharacter, randomPlace, randomEvent, defaultName, weight, temperature);
+      return storyText;
+    }
+
+    function generateStory() {
+      let newStory = returnRandomStoryString();
+
+      if (customName.value.trim() !== "") {
+        const name = customName.value.trim();
+        const defaultName = translations[currentLanguage].defaultName;
+        newStory = newStory.replace(defaultName, name);
+      }
+
+      story.textContent = newStory;
+      story.style.visibility = "visible";
+      story.style.fontSize = fontSizeSelect.value + "px";
+      story.style.fontFamily = fontFamilySelect.value;
+    }
+
+    function saveTextToFile(text, filename) {
+      const blob = new Blob([text], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function resetStory() {
+      story.textContent = "";
+      story.style.visibility = "hidden";
+      story.style.backgroundColor = "#ffc125";
+      story.style.fontFamily = "system-ui";
+      story.style.fontSize = "16px";
+      customName.value = "";
+      usRadio.checked = true;
+      fontFamilySelect.value = "system-ui";
+      fontSizeSelect.value = "16";
+      updateUILanguage("en");
+    }
+
+
+    usRadio.addEventListener("change", () => {
+      if (usRadio.checked) updateUILanguage("en");
+    });
+    itRadio.addEventListener("change", () => {
+      if (itRadio.checked) updateUILanguage("it");
+    });
+
+
+    fontFamilySelect.addEventListener("change", () => {
+      if (story.style.visibility === "visible") {
+        story.style.fontFamily = fontFamilySelect.value;
+      }
+    });
+
+    fontSizeSelect.addEventListener("change", () => {
+      if (story.style.visibility === "visible") {
+        story.style.fontSize = fontSizeSelect.value + "px";
+      }
+    });
+
+    colorPicker.addEventListener("input", () => {
+      story.style.backgroundColor = colorPicker.value;
+    });
+
+    generateBtn.addEventListener("click", generateStory);
+    resetBtn.addEventListener("click", resetStory);
+
+    saveBtn.addEventListener("click", () => {
+      if (story.textContent.trim() !== "") {
+        const defaultName = localStorage.getItem("lastFilename") || "story.txt";
+        let filename = prompt("Enter file name:", defaultName);
+        if (filename && filename.trim() !== "") {
+          filename = filename.trim();
+          if (!filename.endsWith(".txt")) {
+            filename += ".txt";
+          }
+          localStorage.setItem("lastFilename", filename);
+          saveTextToFile(story.textContent, filename);
+        }
+      }
+    });
+
+
+  </script>
+</body>
+</html>

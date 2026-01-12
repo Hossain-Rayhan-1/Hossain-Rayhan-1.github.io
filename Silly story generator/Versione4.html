@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silly Story Generator</title>
+
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: url("color.jpg") no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #e9f3ef;
+}
+
+.container {
+  width: 90%;
+  max-width: 620px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 30px;
+}
+
+label,
+legend {
+  color: #e9f3ef;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  display: block;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="color"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  outline: none;
+}
+
+input[type="text"]::placeholder {
+  color: #d8e3de;
+}
+
+input[type="radio"] {
+  transform: scale(1.2);
+  accent-color: #b2d6c7;
+  margin-right: 8px;
+}
+
+fieldset {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 15px 20px;
+  border-radius: 18px;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 12px 20px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.06);
+  color: #ffffff;
+  margin: 6px;
+  transition: 0.18s ease;
+  backdrop-filter: blur(6px);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.10);
+}
+
+.story {
+  margin-top: 15px;
+  padding: 18px;
+  border-radius: 16px;
+  background: rgba(20, 30, 25, 0.55);
+  color: #e5f1eb;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  visibility: hidden;
+}
+
+mark {
+  background: #d9ffb3;
+  color: #1c2a20;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+  <h1>Silly Story Generator</h1>
+
+  <label for="custom-name">Enter custom name:</label>
+  <input id="custom-name" type="text" placeholder="Type a name...">
+
+  <fieldset>
+    <legend>Choose locale:</legend>
+    <label><input id="us" type="radio" name="uk-us" value="us" checked> US</label>
+    <label><input id="uk" type="radio" name="uk-us" value="uk"> UK</label>
+  </fieldset>
+
+  <button class="generate">Generate random story</button>
+  <button id="reset">Reset</button>
+  <button id="save">Save Story</button>
+
+  <p class="story"></p>
+
+  <label for="color">Background color:</label>
+  <input type="color" id="color">
+
+  <label for="font-size">Font Size:</label>
+  <input type="number" id="font-size" value="16" min="10" max="40">
+
+  <label for="shift">Shift:</label>
+  <input type="number" id="shift" value="1" min="1" max="25">
+  <button id="encrypt">Encrypt Story</button>
+
+  <label for="search">Search:</label>
+  <input type="text" id="search" placeholder="Enter word to search">
+  <button id="search-btn">Search in Story</button>
+</div>
+
+<script>
+const customName = document.getElementById("custom-name");
+const generateBtn = document.querySelector(".generate");
+const story = document.querySelector(".story");
+const colorPicker = document.getElementById("color");
+const resetBtn = document.getElementById("reset");
+const saveBtn = document.getElementById("save");
+const fontSizeInput = document.getElementById("font-size");
+const shiftInput = document.getElementById("shift");
+const encryptBtn = document.getElementById("encrypt");
+const searchInput = document.getElementById("search");
+const searchBtn = document.getElementById("search-btn");
+
+
+saveBtn.disabled = true;
+resetBtn.disabled = true;
+searchBtn.disabled = true;
+
+function randomValueFromArray(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
+const characters = ["Willy the Goblin", "Big Daddy", "Father Christmas"];
+const places = ["the soup kitchen", "Disneyland", "the White House"];
+const events = [
+  "spontaneously combusted",
+  "melted into a puddle on the sidewalk",
+  "turned into a slug and slithered away"
+];
+
+function returnRandomStoryString() {
+  const character = randomValueFromArray(characters);
+  const place = randomValueFromArray(places);
+  const event = randomValueFromArray(events);
+
+  return `It was 94 Fahrenheit outside, so ${character} went for a walk. 
+When they got to ${place}, they stared in horror for a few moments, then ${event}. 
+Bob saw the whole thing, but was not surprised — ${character} weighs 300 pounds, 
+and it was a hot day.`;
+}
+
+function generateStory() {
+  let newStory = returnRandomStoryString();
+
+  if (customName.value !== "") {
+    newStory = newStory.replace("Bob", customName.value);
+  }
+
+  if (document.getElementById("uk").checked) {
+    const weight = `${Math.round(300 / 14)} stone`;
+    const temp = `${Math.round((94 - 32) * 5 / 9)} Celsius`;
+    newStory = newStory.replace("300 pounds", weight);
+    newStory = newStory.replace("94 Fahrenheit", temp);
+  }
+
+  story.textContent = newStory;
+  story.style.visibility = "visible";
+  story.style.fontSize = fontSizeInput.value + "px";
+
+  if (colorPicker.value) story.style.backgroundColor = colorPicker.value;
+  saveBtn.disabled = false;
+  resetBtn.disabled = false;
+  searchBtn.disabled = false;
+}
+
+function resetStory() {
+  story.textContent = "";
+  story.style.visibility = "hidden";
+  customName.value = "";
+  document.getElementById("us").checked = true;
+  fontSizeInput.value = 16;
+  shiftInput.value = 1;
+}
+
+colorPicker.addEventListener("input", () => {
+  story.style.backgroundColor = colorPicker.value;
+});
+
+fontSizeInput.addEventListener("input", () => {
+  story.style.fontSize = fontSizeInput.value + "px";
+});
+
+function caesarCipher(text, shift) {
+  return text.split("").map(char => {
+    if (/[a-z]/.test(char))
+      return String.fromCharCode((char.charCodeAt(0) - 97 + shift) % 26 + 97);
+    if (/[A-Z]/.test(char))
+      return String.fromCharCode((char.charCodeAt(0) - 65 + shift) % 26 + 65);
+    return char;
+  }).join("");
+}
+
+async function saveTextToFile(text, filename) {
+  if (typeof window.showSaveFilePicker === "function") {
+    try {
+      const opts = {
+        suggestedName: filename || "story.txt",
+        types: [
+          {
+            description: "Text Files",
+            accept: { "text/plain": [".txt"] },
+          },
+        ],
+      };
+      const handle = await window.showSaveFilePicker(opts);
+      const writable = await handle.createWritable();
+      await writable.write(text);
+      await writable.close();
+      return;
+    } catch (err) {
+      if (err.name === "AbortError") return;
+    }
+  }
+}
+
+generateBtn.addEventListener("click", generateStory);
+resetBtn.addEventListener("click", resetStory);
+
+
+customName.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    generateStory();
+  }
+});
+
+encryptBtn.addEventListener("click", () => {
+  const shift = parseInt(shiftInput.value) || 0;
+  if (story.textContent.trim() !== "") {
+    story.textContent = caesarCipher(story.textContent, shift);
+  }
+});
+
+saveBtn.addEventListener("click", () => {
+  if (saveBtn.disabled) return;
+  const text = story.textContent.trim();
+  if (!text) return alert("Generate a story first.");
+  let filename = prompt("Enter file name:", "story.txt");
+  if (!filename) return;
+  if (!filename.endsWith(".txt")) filename += ".txt";
+  saveTextToFile(text, filename);
+});
+
+searchBtn.addEventListener("click", () => {
+  if (searchBtn.disabled) return;
+  const word = searchInput.value.trim();
+  if (!word) return alert("Enter a word to search");
+  const regex = new RegExp(`\\b${word}\\b`, "gi");
+  story.innerHTML = story.textContent.replace(regex, match => `<mark>${match}</mark>`);
+});
+
+
+searchInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    searchBtn.click();
+  }
+});
+
+</script>
+
+</body>
+</html>
