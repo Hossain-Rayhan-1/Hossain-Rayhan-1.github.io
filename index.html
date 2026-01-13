@@ -5,154 +5,148 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portfolio - Rayhan Hossain</title>
 
-
 <style>
 body{
   margin:0;
   min-height:100vh;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-  background:url("color2.jpg") no-repeat center center fixed;
-  background-size:cover;
-  color:#e9f3ef;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#1f2933;
+  color:#f1f5f9;
 }
-
 
 /* CONTENITORE */
 .page{
   width:90%;
-  max-width:1200px;
+  max-width:1100px;
   margin:auto;
-  padding-bottom:60px;
+  padding-bottom:40px;
 }
-
 
 /* HEADER */
 .header{
-  position:relative;
   margin-top:30px;
-  color:black
+  position:relative;
 }
-
 
 .main-img{
   width:100%;
-  height:280px;
+  height:220px;
   object-fit:cover;
-  border-radius:26px;
+  border-radius:12px;
 }
-
 
 .overlay{
   position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  padding:26px 50px;
-  background:rgba(255,255,255,0.12);
-  backdrop-filter:blur(18px);
-  border-radius:22px;
-  text-align:center;
-  border:1px solid rgba(255,255,255,0.25);
+  bottom:15px;
+  left:15px;
+  background:#111827;
+  padding:15px 20px;
+  border-radius:10px;
 }
 
-
-.overlay h1{ margin:0; letter-spacing:2px; }
-
+.overlay h1{
+  margin:0;
+  font-size:1.6rem;
+}
 
 .pfp{
   position:absolute;
-  bottom:-40px;
-  right:30px;
-  width:120px;
-  height:120px;
+  right:20px;
+  bottom:-30px;
+  width:90px;
+  height:90px;
   border-radius:50%;
-  border:4px solid rgba(255,255,255,0.25);
+  border:3px solid #1f2933;
   object-fit:cover;
 }
-
 
 /* DATA */
 .date-line{
   text-align:center;
-  margin-top:18px;
+  margin-top:20px;
   font-size:14px;
-  border-bottom:1px solid rgba(255,255,255,0.4);
-  padding-bottom:10px;
+  border-bottom:1px solid #475569;
+  padding-bottom:8px;
 }
-
 
 /* LAYOUT */
 .layout{
   display:grid;
   grid-template-columns:2fr 1fr;
-  gap:25px;
-  margin-top:70px;
+  gap:20px;
+  margin-top:60px;
 }
 
-
-/* GLASS BOX */
+/* BOX */
 .box{
-  background:rgba(255,255,255,0.10);
-  backdrop-filter:blur(20px) saturate(180%);
-  border-radius:26px;
-  padding:25px;
-  border:1px solid rgba(255,255,255,0.25);
-  box-shadow:0 10px 40px rgba(0,0,0,0.35);
-  margin-bottom:25px;
+  background:#111827;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
 }
-
 
 .box h2{
   margin-top:0;
-  border-bottom:1px solid rgba(255,255,255,0.4);
-  padding-bottom:10px;
+  border-bottom:1px solid #334155;
+  padding-bottom:8px;
 }
-
 
 /* PROGETTI */
 .project{
-  margin-bottom:18px;
+  margin-bottom:15px;
 }
-
 
 .project-title{
-  font-weight:600;
-  font-size:1.05rem;
+  font-weight:bold;
 }
-
 
 .project-meta{
   font-size:0.85rem;
-  color:#d8e3de;
+  color:#cbd5f5;
 }
-
 
 .project a{
-  color:#9ae6ff;
+  color:#38bdf8;
   text-decoration:none;
-  margin-right:10px;
 }
-
 
 /* LINGUAGGI */
 .lang{
-  margin-bottom:14px;
+  margin-bottom:12px;
 }
-
 
 .bar{
-  height:10px;
-  background:rgba(255,255,255,0.25);
-  border-radius:10px;
-  overflow:hidden;
+  height:8px;
+  background:#334155;
+  border-radius:6px;
 }
 
+.fill{
+  height:100%;
+  width:100%;
+}
+
+.html{ background:#f97316; }
+.css{ background:#0ea5e9; }
+.js{ background:#eab308; }
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .pfp{
+    position:static;
+    display:block;
+    margin:20px auto 0;
+  }
+}
 
 .fill{ height:100%; width:100%; }
 .html{ background:#ff8c42; }
 .css{ background:#38bdf8; }
 .js{ background:#facc15; }
-
 
 /* RESPONSIVE */
 @media(max-width:900px){
@@ -161,12 +155,9 @@ body{
 </style>
 </head>
 
-
 <body>
 
-
 <div class="page">
-
 
 <!-- HEADER -->
 <div class="header">
@@ -178,37 +169,21 @@ body{
   <img src="pfp.jpg" class="pfp">
 </div>
 
-
 <div class="date-line">
   <span id="today"></span>
 </div>
 
-
 <!-- LAYOUT -->
 <div class="layout">
-
 
 <!-- SINISTRA -->
 <div>
 
-
 <div class="box">
 <h2>Progetti</h2>
 
-
 <div class="project">
-  <div class="project-title">Progetto 1 — es-2024-25</div>
-  <div>Prima pagina web in HTML</div>
-  <div class="project-meta">
-    <a href="es-2024-25/test.html">Link</a>
-    <a href="#">File completo</a>
-    · 3 months ago
-  </div>
-</div>
-
-
-<div class="project">
-  <div class="project-title">Progetto 2 — first-splash</div>
+  <div class="project-title">Progetto 1 — first-splash</div>
   <div>Fix completo</div>
   <div class="project-meta">
     <a href="first-splash/number-guessing-game-start.html">Link</a>
@@ -217,18 +192,18 @@ body{
   </div>
 </div>
 
-
 <div class="project">
-  <div class="project-title">Progetto 3 — Silly story generator</div>
-  <div>Verione 4 Completo</div>
+  <div class="project-title">Progetto 2 — Silly story generator</div>
+  <div>Versione 4 Completa</div>
   <div class="project-meta">
     <a href="Silly%20story%20generator/Versione4.html">Link</a>
     <a href="#">File completo</a>
     · 2 months ago
   </div>
 </div>
+
 <div class="project">
-  <div class="project-title">Progetto 4 — Image gallery</div>
+  <div class="project-title">Progetto 3 — Image gallery</div>
   <div>Versione 2 Completa</div>
   <div class="project-meta">
     <a href="Image%20gallery/Versione2.html">Link</a>
@@ -236,51 +211,33 @@ body{
     · 3 weeks ago
   </div>
 </div>
-</div>
 
-
-<div class="box">
-<h2>Verifiche</h2>
-<div class="project">
-  <div class="project-title">JS Pratica</div>
-  <div class="project-meta">VERIFICA JS · 2 months ago</div>
-    <a href="JS%20pratica/VerficaRH.html">Link</a>
-    <a href="#">File completo</a>
 </div>
 </div>
 
-
-</div>
-
-
+<!-- DESTRA -->
 <div>
-
 
 <div class="box">
 <h2>Chi sono</h2>
 <p>Mi piace programmare, il design e la tecnologia.</p>
 </div>
 
-
 <div class="box">
 <h2>Linguaggi usati</h2>
-
 
 <div class="lang">HTML 100%
   <div class="bar"><div class="fill html"></div></div>
 </div>
 
-
 <div class="lang">CSS 100%
   <div class="bar"><div class="fill css"></div></div>
 </div>
-
 
 <div class="lang">JavaScript 100%
   <div class="bar"><div class="fill js"></div></div>
 </div>
 </div>
-
 
 <div class="box">
 <h2>Professori</h2>
@@ -290,21 +247,15 @@ body{
 </ul>
 </div>
 
-
-</div>
-
-
 </div>
 </div>
-
+</div>
 
 <script>
 const d=new Date();
 document.getElementById("today").innerText=
 `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getFullYear()).slice(-2)}`;
 </script>
+
 </body>
 </html>
-
-
-
